@@ -53,6 +53,8 @@ func main() {
 	bot.AddCommand("echo", commander.Echo)
 	// bot.AddCommand("my stats", MyStats)
 	bot.AddCommand("what is my", commander.ReportStat)
+	for {
+	}
 
 }
 
