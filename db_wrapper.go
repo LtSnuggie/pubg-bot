@@ -47,8 +47,8 @@ func (d *DBWrapper) Close() {
 	d.db.Close()
 }
 
-func (m *MysqlConnector) ShowTables() {
-	res, err := m.Query("show tables")
+func (m *DBWrapper) ShowTables() {
+	res, err := m.db.Query("show tables")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -58,14 +58,14 @@ func (m *MysqlConnector) ShowTables() {
 		res.Scan(&s)
 		t[s] = true
 	}
-	for _, table := range m.config.Tables {
+	for _, table := range m.Config.Tables {
 		if t[table.Name] == nil {
 			m.CreateTable(table)
 		}
 	}
 }
 
-func (m *MysqlConnector) CreateTable(table Table) {
+func (m *DBWrapper) CreateTable(table Table) {
 	s := make([]string, 0)
 	for i, name := range table.ColNames {
 		if name != table.Key {
@@ -77,17 +77,17 @@ func (m *MysqlConnector) CreateTable(table Table) {
 		}
 	}
 	stmt := "CREATE TABLE " + table.Name + " ( " + strings.Join(s, ", ") + " )"
-	_, err := m.Exec(stmt)
+	_, err := m.db.Exec(stmt)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (m *MysqlConnector) DropTable(table string) {
+func (m *DBWrapper) DropTable(table string) {
 	stmt := "DROP TABLE " + table
-	m.Exec(stmt)
+	m.db.Exec(stmt)
 }
 
-func (m *MysqlConnector) DeleteRow(query string) {
+func (m *DBWrapper) DeleteRow(query string) {
 
 }
