@@ -41,6 +41,7 @@ func main() {
 	// report := NewReport(db)
 
 	poller := NewPoller(conf.PollInterval, &db)
+	db.ShowTables()
 	poller.Start()
 	defer poller.Stop()
 
