@@ -32,6 +32,7 @@ func main() {
 	bot.SetTestChannel(conf.TestChannel)
 	bot.SetLogChannel(conf.LogChannel)
 	bot.SendLogMessage("Bot starting up...")
+	fmt.Println("Bot starting up...")
 
 	defer bot.Close()
 
