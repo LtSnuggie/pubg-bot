@@ -40,6 +40,7 @@ func NewDBWrapper(c Config) DBWrapper {
 	}
 	w := DBWrapper{}
 	w.db = d
+	w.ShowTables()
 	return w
 }
 
