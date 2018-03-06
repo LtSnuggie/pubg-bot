@@ -37,11 +37,11 @@ func main() {
 
 	db := NewDBWrapper(conf)
 	defer db.Close()
+	fmt.Println("DB Created...")
 
 	// report := NewReport(db)
 
 	poller := NewPoller(conf.PollInterval, &db)
-	db.ShowTables()
 	poller.Start()
 	defer poller.Stop()
 
