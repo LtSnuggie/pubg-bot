@@ -11,6 +11,7 @@ import (
 type DBWrapper struct {
 	db     *sql.DB
 	Config SqlConfig
+	Tables map[string]Table
 }
 
 type SqlConfig struct {
@@ -40,6 +41,7 @@ func NewDBWrapper(c Config) DBWrapper {
 	}
 	w := DBWrapper{}
 	w.db = d
+	w.Tables = t
 	w.ShowTables()
 	return w
 }
@@ -59,7 +61,7 @@ func (m *DBWrapper) ShowTables() {
 		res.Scan(&s)
 		t[s] = true
 	}
-	for _, table := range m.Config.Tables {
+	for _, table := range m.Tables {
 		if t[table.Name] == nil {
 			m.CreateTable(table)
 		}
