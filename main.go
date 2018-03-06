@@ -22,7 +22,7 @@ type Config struct {
 const configFilename = "./bot.conf.js"
 
 func main() {
-
+	fmt.Println("Starting...")
 	conf, err := loadConfig()
 	if err != nil {
 		fmt.Println("Configfile ", configFilename, " not found...")
