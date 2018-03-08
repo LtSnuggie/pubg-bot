@@ -61,7 +61,19 @@ func (r DBWrapper) GetStat(stat, gamertag string) string {
 	}
 	return ""
 }
-func (r DBWrapper) GetStats(gamertag string) string { return "" }
+func (r DBWrapper) GetStats(gamertag string) string {
+	stmt := "SELECT * FROM stats where gamertag = \"" + gamertag + "\" ORDER BY id DESC"
+	rows, err := r.db.Query(stmt)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	var stats string
+	if rows.Next() {
+		rows.Scan(&stats)
+		return stats
+	}
+	return ""
+}
 func (r DBWrapper) SetStats(details UserDetails) {
 	s := r.GetStat("Matches_Played", details.Gamertag)
 	if s == "" {

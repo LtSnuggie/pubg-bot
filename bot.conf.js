@@ -64,5 +64,5 @@
   "test_channel" : "415702469390106635",
   "log_channel" : "415702469390106635",
   "token" : "NDEyMzM5Nzg3NjQzNjE3Mjgw.DW5ieQ.2R2nSvhuxlRYfFHfUjk9LNgEKQo",
-  "poll_interval" : 1
+  "poll_interval" : 3
 }

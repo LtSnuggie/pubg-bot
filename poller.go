@@ -10,13 +10,13 @@ type Poller struct {
 	WatchList    []string
 	Ticker       *time.Ticker
 	Done         chan bool
-	PollInterval int
+	PollInterval time.Duration
 	Wrapper      DBWrapper
 }
 
 func NewPoller(interval int, db *DBWrapper) Poller {
 	p := Poller{}
-	p.PollInterval = interval
+	p.PollInterval = time.Duration(interval)
 	if interval < 1 {
 		p.PollInterval = 30
 	}
@@ -26,8 +26,10 @@ func NewPoller(interval int, db *DBWrapper) Poller {
 }
 
 func (p *Poller) Start() {
-	p.Ticker = time.NewTicker(time.Duration(p.PollInterval) * time.Second)
+	fmt.Println("Poller started...")
+	p.Ticker = time.NewTicker(p.PollInterval * time.Second)
 	p.WatchList = p.Wrapper.ListWatch()
+	fmt.Println(p.WatchList)
 	go func() {
 		for {
 			select {
@@ -42,17 +44,27 @@ func (p *Poller) Start() {
 }
 
 func (p *Poller) Poll() {
+	fmt.Println("Polling...")
 	for _, tag := range p.WatchList {
 		fmt.Println(tag)
 		details := FetchUserDetails(tag)
-		fetched, err := details.CheckStat("Matches Played")
-		if err != nil {
-			fmt.Println(err.Error())
+		save := false
+		if p.Wrapper.GetStats(tag) != "" {
+			fetched, err := details.CheckStat("Matches Played")
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				db, err := strconv.ParseFloat(p.Wrapper.GetStat("Matches_Played", tag), 32)
+				if err != nil {
+					fmt.Println("No stats found for", tag)
+				} else if float64(fetched) != db {
+					save = true
+				}
+			}
+		} else {
+			save = true
 		}
-		db, err := strconv.ParseFloat(p.Wrapper.GetStat("Matches_Played", tag), 32)
-		if err != nil {
-			fmt.Println("No stats found for", tag)
-		} else if float64(fetched) != db {
+		if save {
 			fmt.Println("New Stat detected...")
 			if len(details.Stats) != 0 {
 				p.Wrapper.SetStats(details)
