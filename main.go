@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"time"
 
 	discordbot "github.com/ltsnuggie/discord-bot"
 )
@@ -56,9 +55,8 @@ func main() {
 	bot.AddCommand("echo", commander.Echo)
 	// bot.AddCommand("my stats", MyStats)
 	bot.AddCommand("what is my", commander.ReportStat)
-	time.Sleep(10 * time.Second)
-	// for {
-	// }
+	for {
+	}
 
 }
 
